@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NECTAR-X | Autonomous Pollination Swarm Control</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: "#020617",
+                        panel: "#07111f",
+                        amberbee: "#f59e0b",
+                        honey: "#eab308",
+                        uv: "#8b5cf6",
+                        neon: "#22d3ee",
+                        signal: "#84cc16",
+                        danger: "#ef4444"
+                    },
+                    fontFamily: {
+                        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+                        sans: ["Inter", "Arial", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="top-header">
+
+        <div class="brand-block">
+
+            <div class="bee-logo">
+                <i data-lucide="bug"></i>
+            </div>
+
+            <div>
+                <div class="eyebrow">NECTAR-X / EDGE AI POLLINATION CONTROL</div>
+
+                <h1>
+                    AUTONOMOUS NEUROMORPHIC SWARM ROBOTICS
+                </h1>
+
+                <p>
+                    Precision Crop Pollination • Edge AI • Mesh Communication • Ommatidial Vision
+                </p>
+            </div>
+
+        </div>
+
+        <div class="system-state">
+
+            <div class="system-clock">
+                <span id="systemDate">--/--/----</span>
+                <strong id="systemClock">00:00:00</strong>
+            </div>
+
+            <div class="online-state">
+                <span class="pulse-dot"></span>
+                SYSTEM ONLINE
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTROL BAR -->
+    <section class="control-bar">
+
+        <div class="control-item mesh-status">
+
+            <div class="control-icon">
+                <i data-lucide="radio"></i>
+            </div>
+
+            <div>
+                <span class="control-label">ESP-NOW MESH</span>
+                <strong>
+                    <span class="online-text">CONNECTED</span>
+                    <span class="latency-value" id="meshLatency">5</span> ms
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="control-item">
+
+            <div class="control-icon">
+                <i data-lucide="bot"></i>
+            </div>
+
+            <div>
+                <span class="control-label">ACTIVE BEE NODES</span>
+
+                <strong id="activeNodes">
+                    03 / 03
+                </strong>
+
+                <div class="node-pills">
+                    <span>BEE-01</span>
+                    <span>BEE-02</span>
+                    <span>BEE-03</span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="control-item mission-mode">
+
+            <div class="control-icon">
+                <i data-lucide="scan-eye"></i>
+            </div>
+
+            <div>
+                <span class="control-label">VISION SPECTRUM</span>
+
+                <div class="vision-toggle">
+
+                    <button
+                        id="rgbButton"
+                        class="vision-btn active"
+                        data-mode="RGB"
+                    >
+                        RGB
+                    </button>
+
+                    <button
+                        id="uvButton"
+                        class="vision-btn"
+                        data-mode="UV"
+                    >
+                        UV
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="control-item mission-status">
+
+            <div class="control-icon">
+                <i data-lucide="crosshair"></i>
+            </div>
+
+            <div>
+                <span class="control-label">AI MISSION</span>
+                <strong class="mission-green">POLLINATION ACTIVE</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-grid">
+
+
+        <!-- LEFT / CENTER -->
+        <section class="main-workspace">
+
+
+            <!-- CCTV HEADER -->
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-kicker">
+                        <i data-lucide="video"></i>
+                        LIVE OPTICAL ARRAY
+                    </span>
+
+                    <h2>
+                        BEE-EYE CCTV SURVEILLANCE MATRIX
+                    </h2>
+                </div>
+
+                <div class="camera-count">
+                    <span class="rec-dot"></span>
+                    06 OPTICAL FEEDS
+                </div>
+
+            </div>
+
+
+            <!-- CCTV WALL -->
+            <div class="cctv-wall">
+
+                <!-- CAM 01 -->
+                <article class="camera-card">
+
+                    <div class="camera-header">
+                        <span>
+                            <span class="rec-dot"></span>
+                            CAM-01
+                        </span>
+
+                        <span>BEE-01 / FRONT OPTIC</span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <canvas
+                            class="bee-camera"
+                            id="camera1"
+                            data-camera="1"
+                        ></canvas>
+
+                        <div class="camera-vignette"></div>
+
+                        <div class="hex-optics"></div>
+
+                        <div class="detection-box box-one">
+                            <span class="detection-title">FLOWER-07</span>
+                            <span>STIGMA</span>
+                            <b>96.4%</b>
+                        </div>
+
+                        <div class="crosshair center-crosshair"></div>
+
+                        <div class="camera-overlay">
+                            <span>YOLOV8 / TARGET LOCK</span>
+                            <span id="camTime1">00:00:00</span>
+                        </div>
+
+                        <div class="hud-corner top-left">
+                            ALT <b id="alt1">24.8</b>cm
+                        </div>
+
+                        <div class="hud-corner bottom-left">
+                            BAT <b id="bat1">97</b>%
+                        </div>
+
+                        <div class="hud-corner bottom-right">
+                            FORCE <b id="force1">2.4</b>mN
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CAM 02 -->
+                <article class="camera-card">
+
+                    <div class="camera-header">
+                        <span>
+                            <span class="rec-dot"></span>
+                            CAM-02
+                        </span>
+
+                        <span>BEE-01 / SIDE OPTIC</span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <canvas
+                            class="bee-camera"
+                            id="camera2"
+                            data-camera="2"
+                        ></canvas>
+
+                        <div class="camera-vignette"></div>
+                        <div class="hex-optics"></div>
+
+                        <div class="detection-box box-two">
+                            <span class="detection-title">FLOWER-12</span>
+                            <span>ANTHER</span>
+                            <b>94.8%</b>
+                        </div>
+
+                        <div class="camera-overlay">
+                            <span>UV NECTAR GUIDE</span>
+                            <span id="camTime2">00:00:00</span>
+                        </div>
+
+                        <div class="hud-corner top-left">
+                            ALT <b id="alt2">31.2</b>cm
+                        </div>
+
+                        <div class="hud-corner bottom-left">
+                            BAT <b id="bat2">93</b>%
+                        </div>
+
+                        <div class="hud-corner bottom-right">
+                            FORCE <b id="force2">3.1</b>mN
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CAM 03 -->
+                <article class="camera-card">
+
+                    <div class="camera-header">
+                        <span>
+                            <span class="rec-dot"></span>
+                            CAM-03
+                        </span>
+
+                        <span>BEE-02 / FRONT OPTIC</span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <canvas
+                            class="bee-camera"
+                            id="camera3"
+                            data-camera="3"
+                        ></canvas>
+
+                        <div class="camera-vignette"></div>
+                        <div class="hex-optics"></div>
+
+                        <div class="detection-box box-three">
+                            <span class="detection-title">FLOWER-03</span>
+                            <span>STIGMA</span>
+                            <b>98.1%</b>
+                        </div>
+
+                        <div class="camera-overlay">
+                            <span>AI TRACKING</span>
+                            <span id="camTime3">00:00:00</span>
+                        </div>
+
+                        <div class="hud-corner top-left">
+                            ALT <b id="alt3">18.7</b>cm
+                        </div>
+
+                        <div class="hud-corner bottom-left">
+                            BAT <b id="bat3">89</b>%
+                        </div>
+
+                        <div class="hud-corner bottom-right">
+                            FORCE <b id="force3">1.8</b>mN
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CAM 04 -->
+                <article class="camera-card">
+
+                    <div class="camera-header">
+                        <span>
+                            <span class="rec-dot"></span>
+                            CAM-04
+                        </span>
+
+                        <span>BEE-02 / REAR OPTIC</span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <canvas
+                            class="bee-camera"
+                            id="camera4"
+                            data-camera="4"
+                        ></canvas>
+
+                        <div class="camera-vignette"></div>
+                        <div class="hex-optics"></div>
+
+                        <div class="detection-box box-four">
+                            <span class="detection-title">FLOWER-09</span>
+                            <span>NECTAR</span>
+                            <b>91.7%</b>
+                        </div>
+
+                        <div class="camera-overlay">
+                            <span>MOTION TRACK</span>
+                            <span id="camTime4">00:00:00</span>
+                        </div>
+
+                        <div class="hud-corner top-left">
+                            ALT <b id="alt4">26.4</b>cm
+                        </div>
+
+                        <div class="hud-corner bottom-left">
+                            BAT <b id="bat4">84</b>%
+                        </div>
+
+                        <div class="hud-corner bottom-right">
+                            FORCE <b id="force4">2.7</b>mN
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CAM 05 -->
+                <article class="camera-card">
+
+                    <div class="camera-header">
+                        <span>
+                            <span class="rec-dot"></span>
+                            CAM-05
+                        </span>
+
+                        <span>BEE-03 / FRONT OPTIC</span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <canvas
+                            class="bee-camera"
+                            id="camera5"
+                            data-camera="5"
+                        ></canvas>
+
+                        <div class="camera-vignette"></div>
+                        <div class="hex-optics"></div>
+
+                        <div class="detection-box box-five">
+                            <span class="detection-title">FLOWER-21</span>
+                            <span>STIGMA</span>
+                            <b>97.6%</b>
+                        </div>
+
+                        <div class="camera-overlay">
+                            <span>SWARM TARGET</span>
+                            <span id="camTime5">00:00:00</span>
+                        </div>
+
+                        <div class="hud-corner top-left">
+                            ALT <b id="alt5">22.1</b>cm
+                        </div>
+
+                        <div class="hud-corner bottom-left">
+                            BAT <b id="bat5">78</b>%
+                        </div>
+
+                        <div class="hud-corner bottom-right">
+                            FORCE <b id="force5">4.2</b>mN
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- CAM 06 -->
+                <article class="camera-card">
+
+                    <div class="camera-header">
+                        <span>
+                            <span class="rec-dot"></span>
+                            CAM-06
+                        </span>
+
+                        <span>BEE-03 / SIDE OPTIC</span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <canvas
+                            class="bee-camera"
+                            id="camera6"
+                            data-camera="6"
+                        ></canvas>
+
+                        <div class="camera-vignette"></div>
+                        <div class="hex-optics"></div>
+
+                        <div class="detection-box box-six">
+                            <span class="detection-title">FLOWER-17</span>
+                            <span>ANTHER</span>
+                            <b>95.2%</b>
+                        </div>
+
+                        <div class="camera-overlay">
+                            <span>POLLINATION ZONE</span>
+                            <span id="camTime6">00:00:00</span>
+                        </div>
+
+                        <div class="hud-corner top-left">
+                            ALT <b id="alt6">34.5</b>cm
+                        </div>
+
+                        <div class="hud-corner bottom-left">
+                            BAT <b id="bat6">72</b>%
+                        </div>
+
+                        <div class="hud-corner bottom-right">
+                            FORCE <b id="force6">3.6</b>mN
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <!-- NAVIGATION -->
+            <section class="navigation-panel">
+
+                <div class="section-heading compact">
+
+                    <div>
+                        <span class="section-kicker">
+                            <i data-lucide="map"></i>
+                            SWARM NAVIGATION
+                        </span>
+
+                        <h2>HEX-SPATIAL FLORAL MAP</h2>
+                    </div>
+
+                    <div class="map-legend">
+                        <span><i class="legend-bee"></i>BEE</span>
+                        <span><i class="legend-flower"></i>UV TARGET</span>
+                        <span><i class="legend-route"></i>TRAJECTORY</span>
+                    </div>
+
+                </div>
+
+                <div class="map-wrapper">
+
+                    <canvas id="navigationCanvas"></canvas>
+
+                    <div class="map-coordinates">
+                        X: <span id="mapX">142.4</span>
+                        Y: <span id="mapY">87.6</span>
+                        Z: <span id="mapZ">24.8</span>cm
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- RIGHT ANALYTICS SIDEBAR -->
+        <aside class="analytics-sidebar">
+
+
+            <!-- FLOWERS -->
+            <section class="analytics-card pollination-card">
+
+                <div class="card-heading">
+                    <span>MISSION OUTPUT</span>
+                    <i data-lucide="flower-2"></i>
+                </div>
+
+                <div class="pollination-number" id="pollinatedCount">
+                    127
+                </div>
+
+                <div class="pollination-label">
+                    FLOWERS POLLINATED
+                </div>
+
+                <div class="progress-line">
+                    <span style="width: 73%"></span>
+                </div>
+
+                <div class="stat-row">
+                    <span>MISSION TARGET</span>
+                    <strong>175</strong>
+                </div>
+
+                <div class="stat-row">
+                    <span>SUCCESS RATE</span>
+                    <strong class="cyan-text">94.8%</strong>
+                </div>
+
+            </section>
+
+
+            <!-- CONTACT FORCE -->
+            <section class="analytics-card">
+
+                <div class="card-heading">
+                    <span>CONTACT FORCE</span>
+                    <i data-lucide="hand"></i>
+                </div>
+
+                <div class="force-display">
+
+                    <div>
+                        <strong id="mainForce">2.8</strong>
+                        <span>mN</span>
+                    </div>
+
+                    <span class="safe-badge" id="forceStatus">
+                        SAFE
+                    </span>
+
+                </div>
+
+                <div class="force-meter">
+
+                    <div class="force-safe-zone"></div>
+                    <div class="force-danger-zone"></div>
+                    <span id="forceNeedle"></span>
+
+                </div>
+
+                <div class="force-scale">
+                    <span>0</span>
+                    <span>2.5</span>
+                    <span>5</span>
+                    <span>7.5</span>
+                    <span>10+</span>
+                </div>
+
+                <p class="threshold-text">
+                    <i data-lucide="shield-check"></i>
+                    Maximum recommended stigma contact: <b>5 mN</b>
+                </p>
+
+            </section>
+
+
+            <!-- SWARM -->
+            <section class="analytics-card swarm-card">
+
+                <div class="card-heading">
+                    <span>SWARM TELEMETRY</span>
+                    <i data-lucide="activity"></i>
+                </div>
+
+                <div class="swarm-node">
+
+                    <div class="node-name">
+                        <span class="node-live"></span>
+                        BEE-01
+                    </div>
+
+                    <div class="node-bar">
+                        <span id="beeBattery1" style="width:97%"></span>
+                    </div>
+
+                    <strong id="beeBatteryText1">97%</strong>
+
+                </div>
+
+                <div class="swarm-node">
+
+                    <div class="node-name">
+                        <span class="node-live"></span>
+                        BEE-02
+                    </div>
+
+                    <div class="node-bar">
+                        <span id="beeBattery2" style="width:89%"></span>
+                    </div>
+
+                    <strong id="beeBatteryText2">89%</strong>
+
+                </div>
+
+                <div class="swarm-node">
+
+                    <div class="node-name">
+                        <span class="node-live"></span>
+                        BEE-03
+                    </div>
+
+                    <div class="node-bar">
+                        <span id="beeBattery3" style="width:78%"></span>
+                    </div>
+
+                    <strong id="beeBatteryText3">78%</strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- TERMINAL -->
+            <section class="analytics-card terminal-card">
+
+                <div class="card-heading terminal-heading">
+
+                    <span>
+                        EDGE MISSION TERMINAL
+                    </span>
+
+                    <span class="terminal-status">
+                        LIVE
+                    </span>
+
+                </div>
+
+                <div
+                    class="terminal"
+                    id="missionTerminal"
+                ></div>
+
+            </section>
+
+
+        </aside>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="system-footer">
+
+        <span>
+            NECTAR-X AUTONOMOUS POLLINATION SYSTEM
+        </span>
+
+        <span>
+            EDGE AI / YOLOV8 / ESP-NOW / NEUROMORPHIC VISION
+        </span>
+
+        <span>
+            <span class="pulse-dot"></span>
+            ALL SYSTEMS NOMINAL
+        </span>
+
+    </footer>
+
+</div>
+
+<script type="module" src="./app.js"></script>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
